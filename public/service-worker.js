@@ -9,7 +9,7 @@ const CACHED_FILES = [
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",
 ];
-console.log("loaded.....");
+let joffreyDB;
 
 // install
 self.addEventListener("install", function (evt) {
@@ -82,3 +82,28 @@ self.addEventListener("fetch", function (evt) {
     })
   );
 });
+
+// Use IndexedDB to store all requests made to /api
+
+function openDatabase() {
+  // if `joffreyDB` does not already exist in our browser (under our site), it is created
+  const joffreyDBOpenRequests = indexedDB.open("joffreyDB", 1.0);
+  joffreyDBOpenRequests.onerror = function (error) {
+    // error creating db
+    console.error("IndexedDB error:", error);
+  };
+  joffreyDBOpenRequests.onupgradeneeded = function () {
+    // This should only executes if there's a need to create/update db.
+    this.result.createObjectStore("post_requests", {
+      autoIncrement: true,
+      keyPath: "id",
+    });
+  };
+  // This will execute each time the database is opened.
+  joffreyDBOpenRequests.onsuccess = function () {
+    // eslint-disable-next-line no-unused-vars
+    joffreyDB = this.result;
+  };
+}
+
+openDatabase();
