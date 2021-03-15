@@ -1,5 +1,6 @@
-const router = require("express").Router();
-const Transaction = require("../models/transaction.js");
+import express from "express";
+const router = express.Router();
+import Transaction from "../models/transaction.js";
 
 router.post("/api/transaction", ({ body }, res) => {
   Transaction.create(body)
@@ -32,4 +33,4 @@ router.get("/api/transaction", (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

@@ -1,13 +1,15 @@
-const express = require("express");
-const logger = require("morgan");
-const mongoose = require("mongoose");
-const compression = require("compression");
-
+import dotenv from "dotenv";
+import express from "express";
+import morgan from "morgan";
+import mongoose from "mongoose";
+import compression from "compression";
+import router from "./routes/api.js";
+dotenv.config();
 const PORT = 3000;
 
 const app = express();
 
-app.use(logger("dev"));
+app.use(morgan("dev"));
 
 app.use(compression());
 app.use(express.urlencoded({ extended: true }));
@@ -26,7 +28,7 @@ mongoose.connect(
 );
 
 // routes
-app.use(require("./routes/api.js"));
+app.use(router);
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
