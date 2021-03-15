@@ -4,12 +4,12 @@ const CACHED_FILES = [
   "/",
   "/index.html",
   "/index.js",
+  "/idb.js",
   "/styles.css",
   "/manifest.json",
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png",
 ];
-let joffreyDB;
 
 // install
 self.addEventListener("install", function (evt) {
@@ -81,29 +81,21 @@ self.addEventListener("fetch", function (evt) {
       });
     })
   );
+
+  if (evt.request.clone().method === "POST") {
+    // eslint-disable-next-line no-undef
+    console.log("POST REQUEST", transactions);
+    // eslint-disable-next-line no-undef
+    evt.respondWith(fetch(evt.request.clone().url, transactions));
+  }
 });
 
-// Use IndexedDB to store all requests made to /api
-
-function openDatabase() {
-  // if `joffreyDB` does not already exist in our browser (under our site), it is created
-  const joffreyDBOpenRequests = indexedDB.open("joffreyDB", 1.0);
-  joffreyDBOpenRequests.onerror = function (error) {
-    // error creating db
-    console.error("IndexedDB error:", error);
-  };
-  joffreyDBOpenRequests.onupgradeneeded = function () {
-    // This should only executes if there's a need to create/update db.
-    this.result.createObjectStore("post_requests", {
-      autoIncrement: true,
-      keyPath: "id",
-    });
-  };
-  // This will execute each time the database is opened.
-  joffreyDBOpenRequests.onsuccess = function () {
-    // eslint-disable-next-line no-unused-vars
-    joffreyDB = this.result;
-  };
-}
-
-openDatabase();
+self.addEventListener("message", function (event) {
+  console.log("offline transaction", event.data);
+  // eslint-disable-next-line no-prototype-builtins
+  if (event.data.hasOwnProperty("transaction")) {
+    // receives form data from script.js upon submission
+    // eslint-disable-next-line no-undef
+    transactions = event.data.transaction;
+  }
+});
