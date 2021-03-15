@@ -19,7 +19,7 @@ Describe the big picture of your changes here to communicate to the maintainers 
 
 <!-- Please check the one (or all) that applies to this PR using "x". -->
 
-What types of changes does your code introduce to **Joffrrey**?
+What types of changes does your code introduce to **Joffrey**?
 
 - [ ] Bugfix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
